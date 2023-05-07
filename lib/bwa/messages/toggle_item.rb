@@ -14,6 +14,7 @@ module BWA
         pump4: 0x07,
         pump5: 0x08,
         pump6: 0x09,
+        microsilk: 0x1e,
         blower: 0x0c,
         mister: 0x0e,
         light1: 0x11,
