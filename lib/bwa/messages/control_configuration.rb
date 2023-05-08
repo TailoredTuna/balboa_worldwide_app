@@ -50,7 +50,7 @@ module BWA
         flags = data[1].ord
         pumps[4] = flags & 0x03
         flags = data[22].ord
-        pumps[5] = flags & 0x03
+        pumps[5] = flags & 0x02
         flags = data[2].ord
         lights[0] = (flags & 0x03 != 0)
         lights[1] = ((flags >> 6) & 0x03 != 0)
