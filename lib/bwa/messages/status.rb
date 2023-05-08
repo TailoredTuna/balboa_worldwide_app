@@ -20,7 +20,6 @@ module BWA
                     :aux,
                     :current_temperature,
                     :target_temperature
-                    :microsilk
       attr_reader :temperature_scale
       alias_method :hold?, :hold
       alias_method :priming?, :priming
@@ -58,7 +57,6 @@ module BWA
         self.mister = false
         self.aux = Array.new(2, false)
         self.target_temperature = 100
-        self.microsilk = false
       end
 
       def log?
@@ -92,16 +90,15 @@ module BWA
         pumps[3] = (flags >> 6) & 0x03
         flags = data[12].ord
         pumps[4] = flags & 0x03
-        pumps[5] = (flags >> 2) & 0x03
-
+        flags = data[22].ord
+        pumps[5] = flags & 0x02
+                              
         flags = data[13].ord
         self.circulation_pump = (flags & 0x02 == 0x02)
         self.blower = (flags >> 2) & 0x03
         flags = data[14].ord
         lights[0] = (flags & 0x03 != 0)
         lights[1] = ((flags >> 2) & 0x03 != 0)
-        flags = data[22].ord
-        self.microsilk = (flags & 0x02 == 0x02)
         flags = data[15].ord
         self.mister = (flags & 0x01 == 0x01)
         aux[0] = (flags & 0x08 != 0)
@@ -146,9 +143,6 @@ module BWA
         data[11] = flags.chr
         flags = 0
         flags |= 0x02 if circulation_pump
-        data[22] = flags.chr
-        flags = 0
-        flags |= 0x02 if microsilk
         data[13] = flags.chr
         flags = 0
         flags |= 0x03 if light1
@@ -204,7 +198,6 @@ module BWA
         items << "heating" if heating
         items << temperature_range
         items << "circulation_pump" if circulation_pump
-        items << "microsilk" if microsilk
         items << "blower=#{blower}"
         items << "pumps=#{pumps.inspect}"
         items << "lights=#{lights.inspect}"
